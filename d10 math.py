@@ -54,25 +54,6 @@ def successes(dice,thres,critnum=0,diceSize=10):
                 vals[x]+=trinomial(x,px,0,0,dice)
     return vals
 
-def violence(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10):
-    outcomes={}
-    defVals=successes(defDice,defThres,defCrit,8)
-    atkVals=successes(atkDice,atkThres,atkCrit)
-    for a in atkVals:
-        for d in defVals:
-            if max(a-d,0) in outcomes.keys():
-                outcomes[max(a-d,0)]+=defVals[d]*atkVals[a]
-            else:
-                outcomes[max(a-d,0)]=defVals[d]*atkVals[a]
-    return outcomes
-
-def expDmg(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10):
-    viol=violence(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10)
-    sum=0
-    for d in viol:
-        sum+=d*viol[d]
-    return sum
-
 def graphDict(probList):
     graphCount=len(probList)
     fig, axs = plt.subplots(graphCount)
@@ -89,9 +70,3 @@ def graphDict(probList):
 # print(total)
 # print(probs)
 # print("Calculation Time = "+str(time.time()-startTime)+"s")
-# print(violence(2,6,3,6))
-# print(successes(3,6,critnum=10))
-# print(successes(2,6,diceSize=8))
-# graphDict([violence(2,6,3,6),successes(3,6,critnum=10),successes(2,6,diceSize=8)])
-
-print(expDmg(3,6,3,5))
