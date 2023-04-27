@@ -90,7 +90,7 @@ def expDmgText(param):
 #Sunder - Set B to 7
 #Skewering - Add argument skewer=True
 
-params=paramGen(3,6,4,5)
+params=paramGen(3,6,5,5)
 expDmgText(params)
 textOut(violence(params))
 
