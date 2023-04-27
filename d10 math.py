@@ -54,19 +54,39 @@ def successes(dice,thres,critnum=0,diceSize=10):
                 vals[x]+=trinomial(x,px,0,0,dice)
     return vals
 
+def successCumulative(dice,thres,critnum=0,diceSize=10):
+    vals=successes(dice,thres,critnum,diceSize)
+    for i in vals:
+        for j in range(i):
+            if j<i:
+                vals[j]+=vals[i]
+    return vals
+
 def graphDict(probList):
     graphCount=len(probList)
-    fig, axs = plt.subplots(graphCount)
-    for count, probs in enumerate(probList):
+    if graphCount>1:
+        fig, axs = plt.subplots(graphCount)
+        for count, probs in enumerate(probList):
+            results = probs.keys()
+            probabilities = [x*100 for x in probs.values()]
+            axs[count].bar(results, probabilities)
+    elif graphCount==1:
+        probs=probList[0]
+        fig = plt.figure()
+        ax = fig.add_axes([0,0,1,1])
         results = probs.keys()
         probabilities = [x*100 for x in probs.values()]
-        axs[count].bar(results, probabilities)
+        ax.bar(results, probabilities)
+    else:
+        pass
     plt.show()
-# startTime=time.time()
-# total=0
-# probs=successes(3,6,10)
-# for i in probs:
-#     total+=probs[i]
-# print(total)
-# print(probs)
-# print("Calculation Time = "+str(time.time()-startTime)+"s")
+
+def textOut(vals): #Express dictionary of values and percentages as a text table
+    length=len(str(max(vals.keys())))
+    for item in vals:
+        print(str(item).rjust(length, ' ')+': '+str('{:.3f}'.format(100*vals[item])).rjust(7, ' ')+'%')
+
+chart=successCumulative(5,6, critnum=10)
+# chart=successes(5,6)
+textOut(chart)
+graphDict([chart])

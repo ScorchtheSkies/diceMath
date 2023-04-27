@@ -28,7 +28,8 @@ def successes(dice,thres,critnum=0,diceSize=10):
                 vals[x]+=trinomial(x,px,0,0,dice)
     return vals
 
-def violence(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10,skewer=False,unbalance=False,addHit=0,addDef=0,subHit=0,subDef=0):
+def violence(param):
+    defDice,defThres,atkDice,atkThres,defCrit,atkCrit,skewer,unbalance,addHit,addDef,subHit,subDef=param
     outcomes={}
     defVals=successes(defDice,defThres,defCrit,8)
     atkVals=successes(atkDice,atkThres,atkCrit)
@@ -49,12 +50,15 @@ def violence(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10,skewer=False
                 outcomes[dmg]=defVals[d]*atkVals[a]
     return outcomes
 
-def expDmg(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10,skewer=False,unbalance=False,addHit=0,addDef=0,subHit=0,subDef=0):
-    viol=violence(defDice,defThres,atkDice,atkThres,defCrit,atkCrit,skewer,unbalance,addHit,addDef,subHit,subDef)
+def expDmg(param):
+    viol=violence(param)
     sum=0
     for d in viol:
         sum+=d*viol[d]
     return sum
+
+def paramGen(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10,skewer=False,unbalance=False,addHit=0,addDef=0,subHit=0,subDef=0):
+    return (defDice,defThres,atkDice,atkThres,defCrit,atkCrit,skewer,unbalance,addHit,addDef,subHit,subDef)
 
 def graphDict(probList):
     graphCount=len(probList)
@@ -65,9 +69,15 @@ def graphDict(probList):
         axs[count].bar(results, probabilities)
     plt.show()
 
-print(expDmg(3,6,3,5))
+def textOut(vals): #Express dictionary of values and percentages as a text table
+    length=len(str(max(vals.keys())))
+    for item in vals:
+        print(str(item).rjust(length, ' ')+': '+str('{:.3f}'.format(100*vals[item])).rjust(7, ' ')+'%')
 
-#expDmg(A,B,C,D)
+def expDmgText(param):
+    print('Expected Damage: {:.3f}'.format(expDmg(param)))
+
+#paramGen(A,B,C,D)
 #Standard: A = Defence teeth, B = 6, C = Attack Teeth, D = 6
 #Attack/Defense Modifiers:
 #Sharpness - Set D to 5
@@ -79,3 +89,10 @@ print(expDmg(3,6,3,5))
 #Eviscerate - Add or modify argument subDef=1
 #Sunder - Set B to 7
 #Skewering - Add argument skewer=True
+
+params=paramGen(3,6,4,5)
+expDmgText(params)
+textOut(violence(params))
+
+#Full Input
+#paramGen(defDice,defThres,atkDice,atkThres,defCrit=0,atkCrit=10,skewer=False,unbalance=False,addHit=0,addDef=0,subHit=0,subDef=0)
